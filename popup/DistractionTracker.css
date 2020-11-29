@@ -1,0 +1,33 @@
+html, body {
+  height: 250px;
+  width: 175px;
+  background-color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+.button {
+  margin: 3% auto;
+  padding: 4px;
+  text-align: center;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.control:hover {
+  background-color: #797979;
+}
+
+.control {
+  background-color: #b1b1b1;
+}
+
+.time {
+  color: #e7e7e7;
+}
+
+.distraction-count {
+  color: #e7e7e7;
+}
