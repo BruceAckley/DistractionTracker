@@ -1,0 +1,9 @@
+dist/
+dist-zip/
+dist.crx
+
+.DS_Store
+.notes.md
+*.swp
+
+node_modules/

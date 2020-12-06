@@ -1,0 +1,43 @@
+{
+  "name": "distraction-tracker",
+  "version": "1.0.0",
+  "description": "Sets timers for work sessions and counts times distracted.",
+  "main": "./Service/service.js",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix .",
+    "start": "webpack --watch",
+    "start:firefox": "web-ext run --source-dir ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blukmays/DistractionTracker"
+  },
+  "keywords": [
+    "WebExtension"
+  ],
+  "author": "Blu Mays, Martin Rosenberg, Badr Choubai, Bruce Ackley",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/blukmays/DistractionTracker/issues"
+  },
+  "homepage": "https://github.com/blukmays/DistractionTracker#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^6.0.3",
+    "css-loader": "^2.1.1",
+    "eslint": "^7.6.0",
+    "html-webpack-plugin": "^3.2.0",
+    "prettier": "2.0.5",
+    "style-loader": "^0.23.1",
+    "web-ext": "^5.0.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}

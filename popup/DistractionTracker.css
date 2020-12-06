@@ -9,11 +9,12 @@ html, body {
 }
 
 .button {
-  margin: 3% auto;
-  padding: 4px;
+  margin: 4% auto;
+  padding: 6px;
   text-align: center;
   font-size: 1.5em;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .control:hover {
@@ -24,10 +25,17 @@ html, body {
   background-color: #b1b1b1;
 }
 
+.timer {
+  text-align: center;
+  font-size: 1.5em;
+}
+
 .time {
   color: #e7e7e7;
+  font-weight: bold;
 }
 
 .distraction-count {
   color: #e7e7e7;
+  font-weight: bold;
 }

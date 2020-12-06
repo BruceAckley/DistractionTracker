@@ -1,79 +1,142 @@
+var setting = [0, 27, 0];
+var minutes = 0; 
+var seconds = 0;
+var hours = 0;
+var distractions = 0; 
+var running = false;
+
 // TODO: 
-//   - Implement click handlers.
+// - "can't access property "addEventListener", target is null"
 
-var timerStart = getCurrentTime();
+function listenForClicks() {
+  document.addEventListener('click', (event) => {
+    // Based on https://github.com/BraulioVM/countdown-timer/blob/master/element.js 
+    const getNormalizedTime = (hours, minutes, seconds) => {
+      minutes += Math.floor(seconds / 60);
+      seconds = seconds % 60;
+      hours += Math.floor(minutes/60);
+      minutes = minutes % 60;
+      return [hours, minutes, seconds];
+    };
 
-// TODO: Remove hardcoded 10 minute duration.
-var timerEnd = addMinutes(getCurrentTime(), 10);
+    // Recursive tick function
+    const tick = () => {
+      if (running == true) {
+        if (seconds == 0) {
+          if (minutes == 0) {
+            if (hours == 0) {
+              running = false;
+              handleCountEnded();
+            } else {
+              minutes = 59;
+              hours--;
+            }
+          } else {
+            seconds = 59;
+            minutes--;
+          }
+        } else {
+          seconds--;
+        }
+        updateDisplay([hours, minutes, seconds]);
+      }
 
-var distractionCount = 0;
+      setTimeout(function() {
+        tick();
+      }, 1000);
+    };
 
-var timer = setInterval(() => {
+    const handleCountEnded = () => {
+      console.log('Timer expired.');
+    };
 
-  let timeRemaining = timerEnd - timerStart; 
-  updateTimeReadout(timeRemaining);
+    const handleReset = () => {
+      var time = getNormalizedTime(setting[0], setting[1], setting[2]);
+      hours = time[0];
+      minutes = time[1];
+      seconds = time[2];
+      updateDisplay([hours, minutes, seconds]);
+      tick();
+    };
 
-}, 1000);
+    const handleStart = () => {
+      running = true;
+      console.log('Timer started.');
+    };
 
-const handleStartTimer = () => {
+    const handleStop = () => {
+      running = false; 
+      console.log('Timer stopped.');
+    }
 
-};
+    const handleDistraction = () => {
+      distractionCount++;
+      document.getElementById("distraction-count").innerHTML = distractionCount;
+    };
 
-const handleStopTimer = () => {
+    /**
+    * Based on https://www.developerdrive.com/build-countdown-timer-pure-javascript/
+    * Also checkout...
+    * https://github.com/samueljun/tomato-clock/blob/master/src/utils/constants.js 
+    * https://github.com/BraulioVM/countdown-timer 
+    */
+    const updateDisplay = (time) => {
+      if (time >= 0) {
+        document.getElementById("timer-hours").innerHTML= ("0" + time[0]).slice(-2);
+        document.getElementById("timer-mins").innerHTML= ("0" + time[1]).slice(-2);
+        document.getElementById("timer-secs").innerHTML= ("0" + time[2]).slice(-2);
+      }
+      else {
+        document.getElementById("timer").innerHTML = `Session Complete! ${distractionCount} Distractions.`;
+      }
+    };
 
-};
-
-const handleResetTimer = () => {
-
-};
-
-const handleLogDistraction = () => {
-
-  distractionCount++;
-  document.getElementById("distraction-count").innerHTML = distractionCount;
-
-};
-
-/**
-* Based on https://www.developerdrive.com/build-countdown-timer-pure-javascript/
-*/
-const updateTimeReadou = (time) => {
-  if (time >= 0) {
-
-    let hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let mins = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-    let secs = Math.floor((time % (1000 * 60)) / 1000);
-
-    document.getElementById("timer-hours").innerHTML= ("0" + hours).slice(-2);
-    document.getElementById("timer-mins").innerHTML= ("0" + mins).slice(-2);
-    document.getElementById("timer-secs").innerHTML= ("0" + secs).slice(-2);
-
-  }
-  else {
-
-    document.getElementById("timer").innerHTML = `Session Complete! ${distractionCount} Distractions.`;
-
-  }
-};
-
-/**
-* Listen for clicks on the buttons, and send the appropriate message to
-* the content script in the page.
-*/
-const listenForClicks = () => {
-  document.addEventListener("click", (event) => {
-
-    console.log(event);
-    console.log('target');
-    console.log(event.target);
-
+    /**
+     * Handle button clicks
+     */
+    if (e.target.classList.contains("start")) {
+      try {
+        handleStart();
+      } catch (error) {
+        reportError(error);
+      }
+    }
+    else if (e.target.classList.contains("stop")) {
+      try {
+        handleStop();
+      } catch (error) {
+        reportError(error);
+      }
+    }
+    else if (e.target.classList.contains("reset")) {
+      try {
+        handleReset();
+      } catch (error) {
+        reportError(error);
+      }
+    }
+    else if (e.target.classList.contains("log-distraction")) {
+      try {
+        handleDistraction();
+      } catch (error) {
+        reportError(error);
+      }
+    }
   });
-};
+}
 
-const addMinutes = (date, minutes) => {
+// Based on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_second_WebExtension 
+/**
+ * There was an error executing the script.
+ * Display the popup's error message, and hide the normal UI.
+ */
+function reportError(error) {
+  document.querySelector("#popup-content").classList.add("hidden");
+  document.querySelector("#error-content").classList.remove("hidden");
+  console.error(`Failed to execute distraction tracker content script: ${error.message}`);
+}
 
-  return new Date(date.getTime() + minutes * 60000);
-
-};
-
-const getCurrentTime = () => new Date().getTime();
+/**
+ * When the popup loads, add a click handler.
+ */
+listenForClicks();
